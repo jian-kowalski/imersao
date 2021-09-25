@@ -6,14 +6,17 @@ import {
   DataType,
 } from 'sequelize-typescript';
 export enum TransactionType {
-  CREDITO = 'credito',
-  DEBITO = 'debito',
+  CREDITO = 'credit',
+  DEBITO = 'debit',
 }
+export const TransactionTypeList: string[] = Object.values(TransactionType);
 
 export enum TransactionCategory {
   CATEGORIA1 = 'categoria1',
   CATEGORIA2 = 'categoria2',
 }
+
+export const TransactionCategoryList: string[] = Object.values(TransactionCategory);
 
 @Table({
   tableName: 'transactions',
@@ -26,7 +29,7 @@ export class Transaction extends Model {
   id: string;
 
   @Column({ allowNull: false })
-  paymant_date: Date;
+  payment_date: Date;
 
   @Column({ allowNull: false })
   name: string;
