@@ -21,3 +21,4 @@ services:
       - ./.docker/dbdata:/var/lib/mysql
     environment:
       - MYSQL_DATABASE=fin
+      - MYSQL_ROOT_PASSWORD=root
