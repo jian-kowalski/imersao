@@ -5,6 +5,9 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { Transaction } from './transactions/entities/transaction.entity';
 import { TransactionsModule } from './transactions/transactions.module';
+import { AccountModule } from './accounts/account.module';
+import { Account } from './accounts/entities/account.entity';
+import { CommonModule } from './common/common.module';
 
 @Module({
   imports: [
@@ -16,15 +19,17 @@ import { TransactionsModule } from './transactions/transactions.module';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      models: [ Transaction ],
+      models: [ Transaction, Account ],
       autoLoadModels: true,
       synchronize: true,
       sync: {
         alter: true,
-        //force: true
+        force: true
       },
     }),
-    TransactionsModule],
+    TransactionsModule,
+    AccountModule,
+    CommonModule],
   controllers: [AppController],
   providers: [AppService],
 })
