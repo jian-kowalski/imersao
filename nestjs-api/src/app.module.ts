@@ -8,6 +8,9 @@ import { TransactionsModule } from './transactions/transactions.module';
 import { AccountModule } from './accounts/account.module';
 import { Account } from './accounts/entities/account.entity';
 import { CommonModule } from './common/common.module';
+import { AuthModule } from './auth/auth.module';
+import { TenantModule } from './tenant/tenant.module';
+import { ReportModule } from './report/report.module';
 
 @Module({
   imports: [
@@ -24,12 +27,15 @@ import { CommonModule } from './common/common.module';
       synchronize: true,
       sync: {
         alter: true,
-        force: true
+      //  force: true
       },
     }),
     TransactionsModule,
     AccountModule,
-    CommonModule],
+    CommonModule,
+    AuthModule,
+    TenantModule,
+    ReportModule],
   controllers: [AppController],
   providers: [AppService],
 })

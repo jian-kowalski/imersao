@@ -18,8 +18,8 @@ export enum TransactionType {
 export const TransactionTypeList: string[] = Object.values(TransactionType);
 
 export enum TransactionCategory {
-  CATEGORIA1 = 'categoria1',
-  CATEGORIA2 = 'categoria2',
+  CATEGORIA1 = 'category1',
+  CATEGORIA2 = 'category2',
 }
 
 export const TransactionCategoryList: string[] =
