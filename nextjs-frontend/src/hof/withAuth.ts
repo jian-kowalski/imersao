@@ -36,6 +36,7 @@ export function withAuth<P, Q extends ParsedUrlQuery>(
 
     const token = (auth as Token).token;
     const payload = (auth as Token).payload;
+    
     if (request?.subdomain && payload.subdomain !== request?.subdomain) {
       const destination = request.headers.host?.replace(
         request.subdomain,

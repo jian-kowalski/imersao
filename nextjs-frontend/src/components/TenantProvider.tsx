@@ -1,6 +1,6 @@
 import { createContext, useEffect, useState } from "react";
-import { isEqual } from "lodash"; //lodash
 import { useAuthSwr } from "../hooks/useAuthSwr";
+import { isEqual } from "lodash"; //lodash
 
 export interface Tenant {
   id: string;
@@ -18,10 +18,8 @@ export const TenantProvider: React.FunctionComponent = (props) => {
   const { data, error } = useAuthSwr('my-account', {
     refreshInterval: 10000,
   });
-  
-  console.log(data);
+
   useEffect(() => {
-    
     if (!isEqual(data, tenant)) {
       setTenant(data);
     }

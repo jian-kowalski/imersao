@@ -6,7 +6,7 @@ import { useEffect } from "react";
 
 const LoginPage: NextPage = () => {
   const { initialized, keycloak } = useKeycloak<KeycloakInstance>();
-  const { replace, query } = useRouter();
+  const {replace, query} = useRouter();
   const from = query.from;
   const { authenticated, login = () => {} } = keycloak || {};
 

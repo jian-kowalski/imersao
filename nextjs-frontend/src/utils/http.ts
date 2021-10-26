@@ -33,7 +33,7 @@ function addTokenByKeycloak(
     addToken(request, keycloak?.token);
     return request;
   }
-
+  
   return new Promise((resolve, reject) => {
     keycloakEvents$.pipe(first()).subscribe((event: any) => {
       if (event.type === "success" && keycloak?.token) {
@@ -47,9 +47,7 @@ function addTokenByKeycloak(
 }
 
 function addToken(request: AxiosRequestConfig, token: string) {
-  if (request && request.headers) {
-    request.headers["Authorization"] = `Bearer ${token}`;
-  }
+  request.headers["Authorization"] = `Bearer ${token}`;
 }
 
 export default makeHttp;

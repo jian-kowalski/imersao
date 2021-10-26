@@ -14,22 +14,22 @@ const useStyles = makeStyles({
     flexGrow: 1,
   },
 });
-
+//next static
 const Navbar: React.FunctionComponent = () => {
   const { initialized, keycloak } = useKeycloak();
   const tenant = useContext(TenantContext);
   const classes = useStyles();
-  
-  return initialized && keycloak?.authenticated ? (
+
+  return initialized && keycloak?.authenticated && tenant ? (
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
           <Menu />
           <StoreIcon />
           <Typography component="h1" variant="h6" className={classes.title}>
-            Fincycle - tenant.name
+            Financeiro - {tenant.name}
           </Typography>
-          <Typography>Saldo R$ tenant.balance</Typography>
+          <Typography>Saldo R$ {tenant.balance}</Typography>
           <UserAccountMenu />
         </Toolbar>
       </AppBar>

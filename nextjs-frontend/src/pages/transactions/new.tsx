@@ -1,25 +1,28 @@
 import {
-  Box,
   Button,
-  Container,
   Grid,
-  MenuItem,
   TextField,
   Typography,
+  Box,
+  MenuItem,
 } from "@material-ui/core";
+import { useKeycloak } from "@react-keycloak/ssr";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
-import * as React from "react";
 import { useForm } from "react-hook-form";
+import { Head } from "../../components/Head";
+import { Page } from "../../components/Page";
 import makeHttp from "../../utils/http";
 import {
   TransactionCategoryLabels,
   TransactionTypeLabels,
-} from "../../utils/models";
+} from "../../utils/model";
 
-export const TransactionsNewPage: NextPage = () => {
+const TransactionsNewPage: NextPage = () => {
   const { register, handleSubmit } = useForm();
   const router = useRouter();
+  const { initialized, keycloak } = useKeycloak();
+
   async function onSubmit(data: any) {
     try {
       await makeHttp().post("transactions", data);
@@ -28,10 +31,21 @@ export const TransactionsNewPage: NextPage = () => {
       console.error(e);
     }
   }
-  return (
-    <Container>
-      <Typography component="h1" variant="h4" align="center">
-        Nova transações
+
+  if (
+    typeof window !== "undefined" &&
+    initialized &&
+    !keycloak?.authenticated
+  ) {
+    router.replace(`/login?from=${window!.location.pathname}`);
+    return null;
+  }
+
+  return keycloak?.authenticated ? (
+    <Page>
+      <Head title="Nova transação" />
+      <Typography component="h1" variant="h4">
+        Nova transação
       </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Grid container>
@@ -42,14 +56,16 @@ export const TransactionsNewPage: NextPage = () => {
               required
               label="Data pagamento"
               fullWidth
-              InputLabelProps={{ shrink: true }}
+              InputLabelProps={{
+                shrink: true,
+              }}
             />
             <TextField
               {...register("name")}
               label="Nome"
               required
               fullWidth
-              inputProps={{ maxLen: 255 }}
+              inputProps={{ maxLength: 255 }}
             />
             <TextField
               {...register("description")}
@@ -81,7 +97,7 @@ export const TransactionsNewPage: NextPage = () => {
               {...register("type")}
               select
               required
-              label="Tipo Operação"
+              label="Tipo de operação"
               fullWidth
             >
               {TransactionTypeLabels.map((i, key) => (
@@ -103,8 +119,8 @@ export const TransactionsNewPage: NextPage = () => {
           </Grid>
         </Grid>
       </form>
-    </Container>
-  );
+    </Page>
+  ) : null;
 };
 
 export default TransactionsNewPage;
