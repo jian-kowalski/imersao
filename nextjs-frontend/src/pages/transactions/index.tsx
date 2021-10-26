@@ -4,7 +4,7 @@ import {
   IntegratedPaging,
   PagingState,
   SearchState,
-  SortingState,
+  SortingState
 } from "@devexpress/dx-react-grid";
 import {
   Grid,
@@ -12,19 +12,21 @@ import {
   SearchPanel,
   Table,
   TableHeaderRow,
-  Toolbar,
+  Toolbar
 } from "@devexpress/dx-react-grid-material-ui";
-import { Button, Container, Typography } from "@material-ui/core";
+import { Button, Typography } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import { format, parseISO } from "date-fns";
-import { GetServerSideProps, NextPage } from "next";
+import { NextPage } from "next";
 import { useRouter } from "next/router";
 import * as React from "react";
-import { Token, validateAuth } from "../../utils/auth";
+import { Head } from "../../components/Head";
+import { Page } from "../../components/Page";
+import { withAuth } from "../../hof/withAuth";
 import makeHttp from "../../utils/http";
 import { Transaction } from "../../utils/models";
 
-interface TransationsPagePros {
+interface TransactionsPageProps {
   transactions: Transaction[];
 }
 
@@ -48,10 +50,12 @@ const columns: Column[] = [
     },
   },
 ];
-export const TransactionsPage: NextPage<TransationsPagePros> = (props) => {
+
+const TransactionsPage: NextPage<TransactionsPageProps> = (props) => {
   const router = useRouter();
   return (
-    <Container>
+    <Page>
+      <Head title="Minhas transações" />
       <Typography component="h1" variant="h4" align="center">
         Minhas transações
       </Typography>
@@ -77,27 +81,17 @@ export const TransactionsPage: NextPage<TransationsPagePros> = (props) => {
         <PagingPanel />
         <IntegratedPaging />
       </Grid>
-    </Container>
+    </Page>
   );
 };
-
 export default TransactionsPage;
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const auth = validateAuth(ctx.req);
-  if (!auth) {
-    return {
-      redirect: {
-        permanent: false,
-        destination: "/login",
-      },
-    };
-  }
-
-  const token = (auth as Token).token;
+export const getServerSideProps = withAuth(async (ctx, { token }) => {
   const { data: transactions } = await makeHttp(token).get("transactions");
 
   return {
-    props: { transactions },
+    props: {
+      transactions,
+    },
   };
-};
+});

@@ -1,6 +1,6 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { KeycloakProfile, KeycloakTokenParsed } from "keycloak-js";
-import { parserCookies } from "./cookies";
+import { destroyCookie, parseCookies } from "./cookies";
 
 interface IKeyCloakConfig {
   realm: string;
@@ -22,12 +22,11 @@ export type Token = { token: string; payload: Payload };
 type Request = { headers: { cookie?: any } };
 
 export function validateAuth(req?: Request): Token | boolean {
-  const cookie = parserCookies(req);
-  if (!cookie.kcToken) {
+  const cookies = parseCookies(req);
+  if (!cookies.kcToken) {
     return false;
   }
-
-  const token = Buffer.from(cookie.kcToken, "base64").toString("utf-8");
+  const token = Buffer.from(cookies.kcToken, "base64").toString("utf-8");
   const payloadOrFalse = verifyToken(token, process.env.JWT_SECRET as string);
   return payloadOrFalse
     ? ({ token, payload: payloadOrFalse } as any)
@@ -41,4 +40,9 @@ export function verifyToken(token: string, key: string): JwtPayload | false {
     console.error(e, token, key);
     return false;
   }
+}
+
+export function createAuthCookies() {
+  destroyCookie("kcToken");
+  destroyCookie("kcIdToken");
 }
